@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TUGAS 3 HTML</title>
+</head>
+<!-- Membagi 4 baris: Header, Navigasi, Content Tengah, dan Footer -->
+<frameset rows="16%,9%,*,7%" frameborder="1" border="4" bordercolor="#E60012">
+    <!-- Header -->
+    <frame src="header.html" name="headerFrame" noresize scrolling="no">
+    
+    <!-- Navigation Menu -->
+    <frame src="menu.html" name="menuFrame" noresize scrolling="no">
+    
+    <!-- Content Tengah (3 Kolom: Left, Main, Right) -->
+    <frameset cols="22%,56%,22%" frameborder="1" border="3" bordercolor="#E60012">
+        <frame src="left.html" name="leftFrame">
+        <frame src="home.html" name="mainFrame"> <!-- Area Main Content sebagai Target -->
+        <frame src="right.html" name="rightFrame">
+    </frameset>
+    
+    <!-- Footer -->
+    <frame src="footer.html" name="footerFrame" noresize scrolling="no">
+</frameset>
+</html>
