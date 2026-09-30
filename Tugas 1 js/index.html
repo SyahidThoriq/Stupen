@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tugas 1 - JavaScript Luas Bangun Datar</title>
+</head>
+<body>
+
+    <h2>Perhitungan Luas Bangun Datar (JavaScript)</h2>
+
+    <script>
+        // ========================================================
+        // 1. MENGHITUNG LUAS PERSEGI PANJANG
+        // Rumus: Panjang x Lebar
+        // ========================================================
+        
+        // Fungsi menghitung luas persegi panjang menggunakan arrow function
+        const hitungPersegiPanjang = (panjang, lebar) => {
+            return panjang * lebar; // Mengalikan nilai panjang dengan lebar
+        };
+
+        // Menentukan nilai variabel
+        let p = 12; // Nilai panjang
+        let l = 8;  // Nilai lebar
+        
+        // Memanggil fungsi dan menyimpan hasil
+        let luasPP = hitungPersegiPanjang(p, l);
+
+        // Cetak output ke halaman web
+        document.write("Hasil luas persegi panjang (panjang " + p + " & lebar " + l + ") = <strong>" + luasPP + "</strong><br><br>");
+
+
+        // ========================================================
+        // 2. MENGHITUNG LUAS BUJUR SANGKAR (PERSEGI)
+        // Rumus: Sisi x Sisi
+        // ========================================================
+        
+        // Fungsi menghitung luas bujur sangkar
+        function hitungBujurSangkar(sisi) {
+            return sisi * sisi; // Mengalikan sisi dengan sisi
+        }
+
+        // Menentukan nilai variabel
+        let s = 15; // Nilai sisi
+        
+        // Memanggil fungsi
+        let luasBS = hitungBujurSangkar(s);
+
+        // Cetak output ke halaman web
+        document.write("Hasil luas bujur sangkar (sisi " + s + ") = <strong>" + luasBS + "</strong><br><br>");
+
+
+        // ========================================================
+        // 3. MENGHITUNG LUAS SEGITIGA
+        // Rumus: 1/2 x Alas x Tinggi
+        // ========================================================
+        
+        // Fungsi menghitung luas segitiga
+        function hitungSegitiga(alas, tinggi) {
+            return 0.5 * alas * tinggi; // Perkalian setengah, alas, dan tinggi
+        }
+
+        // Menentukan nilai variabel
+        let a = 14; // Nilai alas
+        let t = 18; // Nilai tinggi
+        
+        // Memanggil fungsi
+        let luasSegitiga = hitungSegitiga(a, t);
+
+        // Cetak output ke halaman web
+        document.write("Hasil luas segitiga (alas " + a + " & tinggi " + t + ") = <strong>" + luasSegitiga + "</strong>");
+    </script>
+
+</body>
+</html>
