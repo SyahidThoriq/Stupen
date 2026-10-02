@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tugas Pertemuan 3 - Manajemen Toko</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h2 { color: #333; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .form-group { margin-bottom: 10px; }
+        input { padding: 5px; margin-right: 5px; }
+        button { padding: 5px 10px; cursor: pointer; }
+        .btn-delete { background-color: #ff4d4d; color: white; border: none; padding: 4px 8px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <h2>Daftar Produk Toko</h2>
+    
+    <!-- Form Tambah Produk -->
+    <div class="form-group">
+        <input type="text" id="namaProduk" placeholder="Nama Produk">
+        <input type="number" id="hargaProduk" placeholder="Harga">
+        <input type="number" id="stokProduk" placeholder="Stok">
+        <button onclick="tambahProdukDariForm()">Tambah Produk</button>
+    </div>
+
+    <!-- Tabel Daftar Produk -->
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nama Produk</th>
+                <th>Harga</th>
+                <th>Stok</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody id="tabelProduk">
+            <!-- Data akan dirender melalui JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        // 1. Array produkToko (Sesuai soal)
+        let produkToko = [
+            { id: 1, nama: "Laptop", harga: 7000000, stok: 5 },
+            { id: 2, nama: "Mouse", harga: 200000, stok: 10 },
+            { id: 3, nama: "Keyboard", harga: 350000, stok: 7 }
+        ];
+
+        // 2. Fungsi Menampilkan Produk ke Tabel HTML
+        function tampilkanProduk() {
+            const tbody = document.getElementById("tabelProduk");
+            tbody.innerHTML = ""; // Bersihkan tabel sebelum render ulang
+
+            produkToko.forEach(produk => {
+                const row = `
+                    <tr>
+                        <td>${produk.id}</td>
+                        <td>${produk.nama}</td>
+                        <td>Rp ${produk.harga.toLocaleString("id-ID")}</td>
+                        <td>${produk.stok}</td>
+                        <td><button class="btn-delete" onclick="hapusProduk(${produk.id})">Hapus</button></td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        // 3. Fungsi Tambah Produk
+        function tambahProduk(nama, harga, stok) {
+            const idBaru = produkToko.length > 0 ? produkToko[produkToko.length - 1].id + 1 : 1;
+            produkToko.push({ id: idBaru, nama: nama, harga: harga, stok: stok });
+            tampilkanProduk();
+        }
+
+        // Fungsi pembantu untuk mengambil data dari input HTML
+        function tambahProdukDariForm() {
+            const nama = document.getElementById("namaProduk").value;
+            const harga = parseInt(document.getElementById("hargaProduk").value);
+            const stok = parseInt(document.getElementById("stokProduk").value);
+
+            if (nama && !isNaN(harga) && !isNaN(stok)) {
+                tambahProduk(nama, harga, stok);
+                // Kosongkan form input
+                document.getElementById("namaProduk").value = "";
+                document.getElementById("hargaProduk").value = "";
+                document.getElementById("stokProduk").value = "";
+            } else {
+                alert("Harap isi semua kolom dengan benar!");
+            }
+        }
+
+        // 4. Fungsi Hapus Produk
+        function hapusProduk(id) {
+            produkToko = produkToko.filter(produk => produk.id !== id);
+            tampilkanProduk();
+        }
+
+        // Jalankan tampilkanProduk saat halaman pertama kali dibuka
+        tampilkanProduk();
+    </script>
+
+</body>
+</html>
