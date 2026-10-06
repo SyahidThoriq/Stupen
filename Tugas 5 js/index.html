@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tugas 5 JS - Manajemen Produk Toko</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 0 20px;
+      background-color: #f4f6f9;
+    }
+    h2 { color: #333; }
+    .card {
+      background: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    form {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    input {
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      flex: 1;
+    }
+    button {
+      padding: 8px 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover { background-color: #0056b3; }
+    .btn-delete {
+      background-color: #dc3545;
+      padding: 4px 8px;
+      font-size: 12px;
+    }
+    .btn-delete:hover { background-color: #bd2130; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+    th { background-color: #f8f9fa; }
+  </style>
+</head>
+<body>
+
+  <h2>Aplikasi Manajemen Produk Toko</h2>
+
+  <!-- Form Tambah Produk -->
+  <div class="card">
+    <h3>Tambah Produk Baru</h3>
+    <form id="formProduk">
+      <input type="number" id="idProduk" placeholder="ID Produk" required>
+      <input type="text" id="namaProduk" placeholder="Nama Produk" required>
+      <input type="number" id="hargaProduk" placeholder="Harga (Rp)" required>
+      <button type="submit">Tambah Produk</button>
+    </form>
+  </div>
+
+  <!-- Tabel Daftar Produk -->
+  <div class="card">
+    <h3>Daftar Produk</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nama Produk</th>
+          <th>Harga</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody id="tabelProduk">
+        <!-- Data produk akan ditampilkan di sini oleh JS -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    // 1. Data Produk Awal (Minimal 5 Produk)
+    let produkList = [
+      { id: 1, nama: "Laptop", harga: 12000000 },
+      { id: 2, nama: "Smartphone", harga: 5000000 },
+      { id: 3, nama: "Headset", harga: 350000 },
+      { id: 4, nama: "Keyboard", harga: 750000 },
+      { id: 5, nama: "Mouse", harga: 250000 }
+    ];
+
+    // 2. Fungsi Menambahkan Produk menggunakan SPREAD OPERATOR
+    function tambahProduk(produkBaru) {
+      produkList = [...produkList, produkBaru];
+      tampilkanProduk();
+    }
+
+    // 3. Fungsi Menghapus Produk menggunakan REST PARAMETER & Filter
+    function hapusProduk(...idHapus) {
+      produkList = produkList.filter(produk => !idHapus.includes(produk.id));
+      tampilkanProduk();
+    }
+
+    // 4. Fungsi Menampilkan Produk menggunakan DESTRUCTURING
+    function tampilkanProduk() {
+      const tabelBody = document.getElementById("tabelProduk");
+      tabelBody.innerHTML = "";
+
+      produkList.forEach(produk => {
+        // Menggunakan Destructuring Object
+        const { id, nama, harga } = produk;
+
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${id}</td>
+          <td>${nama}</td>
+          <td>Rp ${harga.toLocaleString('id-ID')}</td>
+          <td><button class="btn-delete" onclick="eventHandler.onHapus(${id})">Hapus</button></td>
+        `;
+        tabelBody.appendChild(row);
+      });
+    }
+
+    // 5. EVENT LISTENER HANDLER
+    const eventHandler = {
+      onTampil: () => tampilkanProduk(),
+      onTambah: (produkBaru) => tambahProduk(produkBaru),
+      onHapus: (...ids) => hapusProduk(...ids)
+    };
+
+    // Event Listener untuk Submit Form Tambah Produk
+    document.getElementById("formProduk").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const id = parseInt(document.getElementById("idProduk").value);
+      const nama = document.getElementById("namaProduk").value;
+      const harga = parseInt(document.getElementById("hargaProduk").value);
+
+      // Panggil eventHandler.onTambah menggunakan Spread Operator
+      eventHandler.onTambah({ id, nama, harga });
+
+      // Reset Form
+      this.reset();
+    });
+
+    // Jalankan pertama kali saat halaman dimuat
+    document.addEventListener("DOMContentLoaded", () => {
+      eventHandler.onTampil();
+    });
+  </script>
+</body>
+</html>
