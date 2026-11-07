@@ -1,100 +1,150 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { getBooks } from "../../services/books";
 
 export default function Home() {
-  const [book, setBook] = useState(null);
+  const [featuredBooks, setFeaturedBooks] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchFeaturedBook = async () => {
+    const fetchBooks = async () => {
       setLoading(true);
       const data = await getBooks();
-      if (data && data.length > 0) {
-        setBook(data[0]); // Ambil produk buku pertama
-      }
+      setFeaturedBooks(data || []);
       setLoading(false);
     };
-    fetchFeaturedBook();
+    fetchBooks();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="container py-5 text-center text-muted">
-        Memuat produk...
-      </div>
-    );
-  }
-
-  if (!book) {
-    return (
-      <div className="container py-5 text-center text-muted">
-        Tidak ada produk tersedia.
-      </div>
-    );
-  }
+  // Ambil buku paling pertama sebagai Highlight Utama Hero Banner
+  const heroBook = featuredBooks[0] || {
+    id: 1,
+    title: "Atomic Habits",
+    author: "James Clear",
+    price: 120000,
+    cover_photo: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80",
+    description: "Cara mudah dan terbukti untuk membangun kebiasaan baik & menghancurkan kebiasaan buruk.",
+  };
 
   return (
-    <div className="bg-white min-vh-100 py-5">
-      <div className="container">
-        <div className="row align-items-center g-5">
-          {/* FOTO PRODUCTS / COVER BUKU DI KIRI */}
-          <div className="col-md-5 text-center">
-            <div className="p-4 bg-light rounded-4 shadow-sm border">
+    <div className="bg-gray-50 dark:bg-gray-900 min-h-screen">
+      {/* HERO SECTION DENGAN GAMBAR BUKU UTAMA */}
+      <section className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 py-12 lg:py-16">
+        <div className="max-w-screen-xl px-4 mx-auto grid lg:grid-cols-12 gap-8 items-center">
+          
+          {/* TEKS HERO BANNER (KIRI) */}
+          <div className="mr-auto place-self-center lg:col-span-7 text-left">
+            <span className="inline-flex items-center py-1 px-3 mb-6 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
+              🔥 Best Seller Minggu Ini
+            </span>
+            <h1 className="max-w-2xl mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl dark:text-white">
+              {heroBook.title}
+            </h1>
+            <p className="max-w-2xl mb-2 text-sm font-semibold text-blue-600 dark:text-blue-400">
+              Karya: {heroBook.author?.name || heroBook.author || "Penulis Terkenal"}
+            </p>
+            <p className="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg dark:text-gray-400">
+              {heroBook.description || "Jelajahi koleksi buku terpopuler dan tingkatkan wawasanmu setiap hari dengan harga terbaik."}
+            </p>
+            
+            <div className="flex flex-wrap gap-4 items-center">
+              <Link
+                to={`/books/show/${heroBook.id}`}
+                className="inline-flex items-center justify-center px-6 py-3 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900 shadow-md transition-all"
+              >
+                Beli Sekarang — Rp {Number(heroBook.price || 0).toLocaleString("id-ID")}
+              </Link>
+              <Link
+                to="/books"
+                className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
+              >
+                Lihat Katalog Lainnya
+              </Link>
+            </div>
+          </div>
+
+          {/* GAMBAR BUKU UTAMA / HERO IMAGE (KANAN) */}
+          <div className="lg:mt-0 lg:col-span-5 flex justify-center">
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
               <img
                 src={
-                  book.cover_photo ||
-                  "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400"
+                  heroBook.cover_photo ||
+                  "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80"
                 }
-                alt={book.title}
-                className="img-fluid rounded-3 shadow-sm"
-                style={{ maxHeight: "380px", objectFit: "cover" }}
+                alt={heroBook.title}
+                className="relative w-64 md:w-80 h-96 object-cover rounded-2xl shadow-2xl transform transition duration-500 hover:scale-105"
               />
             </div>
           </div>
 
-          {/* DETAIL BUKU / PRODUK DI KANAN */}
-          <div className="col-md-7">
-            <h1 className="display-6 fw-bold text-dark mb-3">
-              {book.title} - {book.author?.name || book.author || "Penulis"}
-            </h1>
-
-            <div className="d-flex align-items-center gap-3 mb-4">
-              <h2 className="fw-bold text-dark mb-0">
-                Rp {Number(book.price || 120000).toLocaleString("id-ID")}
-              </h2>
-              <div className="text-warning small">
-                ★ ★ ★ ★ ★{" "}
-                <span className="text-muted ms-1">(5.0) 345 Reviews</span>
-              </div>
-            </div>
-
-            {/* TOMBOL ADD TO CART */}
-            <button
-              className="btn btn-primary btn-lg rounded-3 px-4 py-2 my-3 fw-semibold d-inline-flex align-items-center gap-2 shadow-sm"
-              onClick={() =>
-                alert(`Buku "${book.title}" berhasil ditambahkan ke keranjang!`)
-              }
-            >
-              <svg
-                width="20"
-                height="20"
-                fill="currentColor"
-                viewBox="0 0 16 16"
-              >
-                <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
-              </svg>
-              Add to cart
-            </button>
-
-            <div className="mt-4 pt-3 border-top">
-              <p className="text-muted lh-base">
-                {book.description ||
-                  "Studio quality three mic array for crystal clear calls and voice recordings. Six-speaker sound system for a remarkably robust and high-quality audio experience. Up to 256GB of ultrafast SSD storage."}
-              </p>
-            </div>
-          </div>
         </div>
-      </div>
+      </section>
+
+      {/* GRID DAFTAR BUKU PILIHAN */}
+      <section className="py-12 px-4 mx-auto max-w-screen-xl">
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Rekomendasi Lainnya</h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Pilihan buku terbaik untuk menemani harimu</p>
+          </div>
+          <Link to="/books" className="text-blue-600 hover:underline font-semibold text-sm">
+            Lihat Semua →
+          </Link>
+        </div>
+
+        {loading ? (
+          <div className="text-center py-12 text-gray-500">Memuat koleksi...</div>
+        ) : (
+          <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {featuredBooks.slice(0, 4).map((book) => (
+              <div
+                key={book.id}
+                className="flex flex-col justify-between rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
+              >
+                <div>
+                  <div className="h-52 w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-700 mb-4">
+                    <Link to={`/books/show/${book.id}`}>
+                      <img
+                        className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+                        src={
+                          book.cover_photo ||
+                          "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=500&auto=format&fit=crop&q=80"
+                        }
+                        alt={book.title}
+                      />
+                    </Link>
+                  </div>
+                  <span className="mb-2 inline-block rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-semibold text-blue-700 dark:bg-blue-900 dark:text-blue-300">
+                    {book.genre?.name || book.genre || "Umum"}
+                  </span>
+                  <Link
+                    to={`/books/show/${book.id}`}
+                    className="line-clamp-1 block text-base font-bold text-gray-900 hover:text-blue-600 dark:text-white dark:hover:text-blue-400"
+                  >
+                    {book.title}
+                  </Link>
+                  <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                    {book.author?.name || book.author || "Penulis"}
+                  </p>
+                </div>
+
+                <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-3 dark:border-gray-700">
+                  <p className="text-base font-bold text-gray-900 dark:text-white">
+                    Rp {Number(book.price || 0).toLocaleString("id-ID")}
+                  </p>
+                  <Link
+                    to={`/books/show/${book.id}`}
+                    className="inline-flex items-center rounded-lg bg-blue-700 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-800"
+                  >
+                    Detail
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   );
 }
